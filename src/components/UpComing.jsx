@@ -28,12 +28,12 @@ function UpComing() {
   <div className='app-container'>
     { movieList.map((movie) => {
         return(
-      
+            
             <div className="movie-container">
                 <img src={IMG_BASE_URL + movie.poster_path} alt="영화포스터" />
                 <div className="movie-info">
                     <h4>{movie.title}</h4>
-                    <span>{movie.vote_average}</span>
+                    <span>⭐{movie.vote_average}</span>
                 </div>
             </div>
       
