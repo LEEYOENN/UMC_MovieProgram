@@ -1,11 +1,11 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-
+import LoadingSppiner from './LoadingSppiner';
 function Popular() {
     const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
     const [movieList, setMovieList] = useState([]);
-  
-
+    const [loading, setLoading] = useState(true);
+    
     const getMovie = async() => {
         const options = {
             method: 'GET',
@@ -15,10 +15,11 @@ function Popular() {
             }
           };
           
-          fetch('https://api.themoviedb.org/3/movie/popular?api_key=f1c117e96fccad7d5fd48eadb7a04660&language=kr&page=1', options)
+        fetch('https://api.themoviedb.org/3/movie/popular?api_key=f1c117e96fccad7d5fd48eadb7a04660&language=kr&page=1', options)
         .then(response => response.json())
         .then(response => setMovieList(response.results))
         .catch(err => console.error(err));
+        setLoading(false);
     }
     
     useEffect(()=>{
@@ -26,7 +27,11 @@ function Popular() {
     },[])
 
   return (  
-  <div className='app-container'>
+    
+
+    <>
+    {loading ? <LoadingSppiner /> : null} 
+    <div className='app-container'>
     { movieList.map((movie) => {
         return(
       
@@ -42,7 +47,8 @@ function Popular() {
     })
     }
     
-   </div>
+    </div>
+   </>
   )
 }
 
