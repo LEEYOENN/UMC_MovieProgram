@@ -1,0 +1,11 @@
+.footbar {
+    width: 100%;
+    background-color: rgb(20, 20, 63);
+    padding: 15px 0px 15px 0px;
+    text-align: left;
+}
+.footbarMenu{
+    color:white;
+    margin: 20px;
+    text-decoration: none;
+}
