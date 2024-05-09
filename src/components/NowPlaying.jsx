@@ -1,7 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import LoadingSppiner from './LoadingSppiner';
-function Popular() {
+import 'normalize.css'
+function NowPlaying() {
     const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
     const [movieList, setMovieList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ function Popular() {
             }
           };
           
-        fetch('https://api.themoviedb.org/3/movie/popular?api_key=f1c117e96fccad7d5fd48eadb7a04660&language=kr&page=1', options)
+        fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=f1c117e96fccad7d5fd48eadb7a04660&language=en-US&page=1', options)
         .then(response => response.json())
         .then(response => setMovieList(response.results))
         .catch(err => console.error(err));
@@ -24,7 +25,7 @@ function Popular() {
     
     useEffect(()=>{
         getMovie()
-    },[id])
+    },[])
 
   return (  
     
@@ -43,14 +44,13 @@ function Popular() {
                 </div>
             </div>
       
-        )
-    })
-    }
-    
+            )
+        })
+        }
     </div>
    </>
   )
 }
 
-export default Popular;
+export default NowPlaying;
 

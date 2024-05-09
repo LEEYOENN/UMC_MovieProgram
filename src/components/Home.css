@@ -1,3 +1,4 @@
+
 body{
     background-color: #22254b;
 }
@@ -22,6 +23,8 @@ body{
     background-color: rgb(20, 20, 63)
 }
 .searchbar {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
 }

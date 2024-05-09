@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import LoadingSppiner from './LoadingSppiner';
 function UpComing() {
     const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
     const [movieList, setMovieList] = useState([]);
-  
+    const [loading, setLoading] = useState(true);
   
     const getMovie = async() => {
         const options = {
@@ -18,6 +19,7 @@ function UpComing() {
         .then(response => response.json())
         .then(response => setMovieList(response.results))
         .catch(err => console.error(err));
+        setLoading(false)
     }
     
     useEffect(()=>{
@@ -25,23 +27,25 @@ function UpComing() {
     },[])
   
   return (  
-  <div className='app-container'>
-    { movieList.map((movie) => {
-        return(
+    <>
+        {loading ? <LoadingSppiner /> : null};
+        <div className='app-container'>
+            { movieList.map((movie) => {
+                return(
+                    
+                    <div className="movie-container">
+                        <img src={IMG_BASE_URL + movie.poster_path} alt="영화포스터" />
+                        <div className="movie-info">
+                            <h4>{movie.title}</h4>
+                            <span>⭐{movie.vote_average}</span>
+                        </div>
+                    </div>
             
-            <div className="movie-container">
-                <img src={IMG_BASE_URL + movie.poster_path} alt="영화포스터" />
-                <div className="movie-info">
-                    <h4>{movie.title}</h4>
-                    <span>⭐{movie.vote_average}</span>
-                </div>
-            </div>
-      
-        )
-    })
-    }
-    
-   </div>
+                )
+            })
+            } 
+        </div>
+    </>
   )
   }
 export default UpComing

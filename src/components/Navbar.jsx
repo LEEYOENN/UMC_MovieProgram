@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import { useState } from "react";
 import './Nav.css'
+import 'normalize.css'
 function Nav() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -26,8 +27,7 @@ function Nav() {
                 ) : (
                     <Link className="navbarMenu" onClick={handleLoginClick}>Login</Link>
                 )}
-                
-                
+                           
                 <Link className="navbarMenu" to={'/nowplaying'} onClick={handleMenuClick}>Now Playing</Link>
                 <Link className="navbarMenu" to={'/toprated'} onClick={handleMenuClick}>Top Rated</Link>
                 <Link className="navbarMenu" to={'/popular'} onClick={handleMenuClick}>Popular</Link>

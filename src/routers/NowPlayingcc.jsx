@@ -3,7 +3,7 @@ import { dummy } from "./NowPlayingDummy";
 
 const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
 
-function NowPlaying({title, poster_path, vote_average}) {
+function NowPlayingll({title, poster_path, vote_average}) {
     return (
     <div className="movie-container">
         <img src={IMG_BASE_URL + poster_path} alt="영화포스터" />
@@ -14,4 +14,4 @@ function NowPlaying({title, poster_path, vote_average}) {
     </div> 
     );
 }
-export default NowPlaying
+export default NowPlayingll

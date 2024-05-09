@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import './Home.css'
+import 'normalize.css'
 
 function Home() {
 
@@ -9,10 +10,10 @@ function Home() {
         <>
         <body className='back'>
             <div className='enter'>
-            <h3 className='h1'>환영합니다!</h3>
+            <h2 className='h1'>환영합니다!</h2>
             </div>
             <div className='searchdiv'>
-                <h1 className='search'>Find Your Movie!</h1>
+                <h1 className='search'>Find Your Movie!🎥🎬</h1>
                 <div className='searchbar'>
                 <form>
                     <input></input>
