@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-
+import 'normalize.css';
 const MessageWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -19,9 +19,15 @@ const NotFoundText2 = styled.h4`
     font-size: 30px;
     text-align: center;
     color: white;
+
+    &:hover{
+      cursor: pointer;
+      color: yellow;
+  }
 `; 
 function NotFoundPage() {
   const navigate = useNavigate();
+
 const handleMovieClick = () => {  
   navigate(-1);
 }

@@ -24,7 +24,7 @@ function Popular() {
     
     useEffect(()=>{
         getMovie()
-    },[id])
+    },[])
 
   return (  
     
@@ -44,7 +44,7 @@ function Popular() {
             </div>
       
         )
-    })
+     })
     }
     
     </div>

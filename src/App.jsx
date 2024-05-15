@@ -11,8 +11,9 @@ import UpComing from './components/UpComing.jsx'
 import NotFoundPage from './components/NotFoundPage.jsx'
 import 'normalize.css'
 import MovieDetail from './components/MovieDetail.jsx'
+import SignUp from './components/SignUp.jsx'
 function App() {
-  const { id } = useParams();
+
   return (
     <BrowserRouter> 
       <div>
@@ -24,6 +25,7 @@ function App() {
           <Route path='/popular' element={<Popular />} />
           <Route path='/upcoming' element={<UpComing />} />
           <Route path='/movie/:id' element={<MovieDetail />} />
+          <Route path='/signup' element={<SignUp />} />
           <Route path='/*' element={<NotFoundPage />}/>
         </Routes>     
        <Foot />
