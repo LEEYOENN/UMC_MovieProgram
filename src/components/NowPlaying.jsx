@@ -1,12 +1,14 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import LoadingSppiner from './LoadingSppiner';
+import { useNavigate } from 'react-router-dom';
 import 'normalize.css'
 function NowPlaying() {
     const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
     const [movieList, setMovieList] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+    const navigate = useNavigate();
+
     const getMovie = async() => {
         const options = {
             method: 'GET',
@@ -27,6 +29,10 @@ function NowPlaying() {
         getMovie()
     },[])
 
+    const handleOnClick = (movieId) => {
+      navigate(`/movie/${movieId}`)
+    };
+
   return (  
     
 
@@ -37,9 +43,9 @@ function NowPlaying() {
         return(
       
             <div className="movie-container">
-                <img src={IMG_BASE_URL + movie.poster_path} alt="영화포스터" />
+                <img src={IMG_BASE_URL + movie.poster_path} alt="영화포스터" onClick={ () => {handleOnClick(movie.id)}}/>
                 <div className="movie-info">
-                    <h4>{movie.title}</h4>
+                    <h4 onClick={ () => {handleOnClick(movie.id)}}>{movie.title}</h4>
                     <span>⭐{movie.vote_average}</span>
                 </div>
             </div>

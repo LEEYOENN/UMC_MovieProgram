@@ -2,13 +2,97 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import LoadingSppiner from './LoadingSppiner';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+const MovieContainer = styled.div`
+width: 250px;
+margin: 16px;
+color: white;
+background-color: #343869;
+border-radius: 5px;
+position: relative; /* Ensures the Overview can be positioned absolutely */
+`;
+const MovieImg = styled.img`
+  max-width: 100%;
+  position: relative; /* Ensures the Overview can be positioned absolutely */
+  &:hover{
+    cursor: pointer;
+    opacity:0.7;
+  }
+`;
+const MovieTitle = styled.h4`
+  color: white;
+  margin-left: 10px;
+  &:hover{
+    cursor: pointer;
+    opacity:0.8;
+  }
+`;
+const MovieRate = styled.h4`
+  color: white;
+  margin-left: 10px;
+`;
+const MovieWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 10%
+`;
+const Overview = styled.span`
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+
+color: white;
+padding: 10px;
+box-sizing: border-box;
+font-size: 20px;
+border-radius: 5px;
+
+display: flex;
+justify-content: center;
+align-items: center;
+text-align: center;
+
+transition: opacity 0.3s ease;
+pointer-events: none; /* Prevent interactions with the overview */
+`;
+const Title = styled.h2`
+  color: white;
+  margin-left: 75%;
+  
+`;
+const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
 
 function TopRated() {
 
-  const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
+  const [movieOne, setMovieOne] = useState([]);
+
+  const getMovieDetail = async (id) => {
+      const options = {
+          method: 'GET',
+          headers: {
+          accept: 'application/json',
+          Authorization: 'Bearer f1c117e96fccad7d5fd48eadb7a04660'
+          }
+      }
+
+      await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=f1c117e96fccad7d5fd48eadb7a04660&language=en-US`, options)
+      .then(response => response.json())
+      .then(response => setMovieOne(response))            
+      .catch(err => console.error(err));
+      setLoading(false);
+
+  }
+
+
+
+
+  const navigate = useNavigate();
   const [movieList, setMovieList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [hoverMovieId, setHoverMovieId] = useState(null);
 
   const getMovie = async() => {
       const options = {
@@ -36,23 +120,36 @@ function TopRated() {
 
 return (    
 <>
+<Title>Top Rated Movies</Title>
   {loading ? <LoadingSppiner /> : null};
-  <div className='app-container'>
+  <MovieWrapper>
     { movieList.map((movie) => {
         return(
-        
-            <div className="movie-container" key={movie.id}>
-                <img src={IMG_BASE_URL + movie.poster_path} alt="영화포스터" onClick={() => handleMovieClick(movie.id)}/>
+          
+            <MovieContainer key={movie.id}
+              onMouseEnter={ () => {setHoverMovieId(movie.id) ;
+                                    getMovieDetail(hoverMovieId);
+                                    setIsHover(true);
+              }}
+              onMouseLeave={ () => {setHoverMovieId(null);
+                                   setIsHover(false);}
+              }
+              >
+                <MovieImg src={IMG_BASE_URL + movie.poster_path} 
+                  alt="영화포스터" 
+                  onClick={() => handleMovieClick(movie.id)}
+                />
+                {hoverMovieId === movie.id && movieOne ? (<Overview>{movieOne.overview}</Overview>) : null}
                 <div className="movie-info">
-                    <h4 onClick={() => handleMovieClick(movie.id)}>{movie.title}</h4>
-                    <span>⭐{movie.vote_average}</span>
+                    <MovieTitle onClick={() => handleMovieClick(movie.id)}>{movie.title}</MovieTitle>
+                    <MovieRate>⭐{movie.vote_average}</MovieRate>
                 </div>
-            </div>
+            </MovieContainer>
       
         )
     })
     }
-  </div>
+  </MovieWrapper>
  </>
 )
 }

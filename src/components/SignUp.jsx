@@ -34,7 +34,7 @@ const Error = styled.p`
     color: red;
     margin-top:-10px; 
     margin-bottom: 20px;
-`
+`;
 const Button = styled.button`
     width: 80%;
     padding: 10px;
