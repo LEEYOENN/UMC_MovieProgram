@@ -2,6 +2,11 @@ import React from 'react'
 import styled from 'styled-components'; 
 import { useState } from 'react';
 import 'normalize.css';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import axios from 'axios';
 
 const Container = styled.div`
 
@@ -35,6 +40,12 @@ const Error = styled.p`
     margin-top:-10px; 
     margin-bottom: 20px;
 `;
+const NoError = styled.p`
+    font-size: 12px;
+    color: green;
+    margin-top:-10px; 
+    margin-bottom: 20px;
+`;
 const Button = styled.button`
     width: 80%;
     padding: 10px;
@@ -49,172 +60,126 @@ const Button = styled.button`
         background-color: #005603;
     }
     `;
+const ToLogin = styled.h4`
+    margin-top: 60px;
+    margin-bottom: 40px;
+    text-align: center;
+    color: white;
+    &:hover{
+        cursor: pointer;
+    }
+`;
 
-function SignUp() {
-
-    const [form, setForm] = useState({
-        name: '',
-        validName: false,
-        email: '',
-        validEmail: false,
-        age: '',
-        validAge: false,
-        password: '',
-        validPassword: false,
-        passwordCheck: '',
-        validPasswordCheck: false
-    })
-
-    const [passMessage, setPassMessage] = useState({
-        name: '',
-        email: '',
-        age: '',
-        password: '',
-        passwordCheck: '',
-    })
-
-    const handleInputChange = (e) => {
-        const obj = e.target.name;
-        const value = e.target.value
-        setForm(prevState => ({
-            ...prevState,
-            [obj]: value
-        }));
-
-        switch(obj){
-            case 'name':
-                {if(form.name.trim() === ''){
-                    setPassMessage(prevState => ({...prevState, name:"이름을 입력하세요."}))
-                } else if(!/^[a-zA-Z]+$/.test(form.name)){
-                    setPassMessage(prevState => ({...prevState, name:"이름은 문자열만 허용됩니다."}))
-                } else {
-                    setPassMessage(prevState => ({...prevState, name: ""}));
-                    form.validName=true;
-                }
-                break;}
-            case 'email':
-                {if (form.email.trim() === ''){
-                    setPassMessage(prevState => ({...prevState, email: "이메일을 입력하세요."}))
-                 
-                } else if(!/\S+@\S+.\S+/.test(form.email)){
-                    setPassMessage(prevState => ({...prevState, email:"올바른 이메일 형식이 아닙니다."}))
-                
-                } else {
-                    setPassMessage(prevState => ({...prevState, email: ""}));
-                    form.validEmail=true;
-                }
-                break;}
-            case 'age':
-                {if (form.age.length === 0){
-                    setPassMessage(prevState => ({...prevState, age: "나이를 입력하세요."}))
-            
-                } else if (isNaN(form.age)) {
-                    setPassMessage(prevState => ({...prevState, age: "나이는 숫자여야 합니다."}))
-                 
-                } else if (form.age < 0){
-                    setPassMessage(prevState => ({...prevState, age: "나이는 음수가 될 수 없습니다."}))
-                  
-                } else if (form.age % 1 !== 0) {
-                    setPassMessage(prevState => ({...prevState, age:"나이는 소수가 될 수 없습니다."}))
-                   
-                } else if (form.age < 19) {
-                    setPassMessage(prevState => ({...prevState, age: "우리 영화 사이트는 19살 이상만 가입이 가능합니다."}))
-                  
-                } else {
-                    setPassMessage(prevState => ({...prevState, age: ""}))
-                    form.validAge=true;
-                }
-                break;}
-            case 'password':
-                {if(form.password.trim() === ''){
-                    setPassMessage(prevState => ({...prevState, password: "비밀번호를 입력하세요."}))
-             
-                } else if (form.password.length <4){
-                    setPassMessage(prevState => ({...prevState, password: "비밀번호는 최소 4자 이상이어야 합니다."}))
-        
-                } else if (form.password.length > 12){
-                    setPassMessage(prevState => ({...prevState, password: "비밀번호는 최대 12자 이하이어야 합니다."}))
-            
-                } else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,12}$/.test(form.password)){
-                    setPassMessage(prevState => ({...prevState, password: "영어, 숫자, 특수문자를 모두 조합해서 비밀번호를 작성해야합니다."}))
-                
-                } else {
-                    setPassMessage(prevState => ({...prevState, password: ""}));
-                    form.validPassword=true;
-                }
-                break;}
-            case 'passwordCheck':
-            {
-                if(form.passwordCheck.trim() === ''){
-                    setPassMessage(prevState => ({...prevState, passwordCheck: "비밀번호 확인을 입력하세요."}))
-        
-                } else if( form.passwordCheck !== form.password) {
-                    setPassMessage(prevState=>({prevState, passwoerCheck: "비밀번호가 일치하지 않습니다."}))
-            
-                } else {
-                    setPassMessage(prevState => ({...prevState, passwordCheck: ""}));
-                    form.validPasswordCheck=true;
-                }
-                break;
+const schema = yup.object().shape({
+    name: yup.string().required("이름을 입력하세요."),
+    userid: yup.string().required("아이디를 입력해주세요."),
+    email: yup.string().email("이메일 형식에 맞게 입력해주세요.").required("이메일을 입력해주세요."),
+    age: yup
+        .number()
+        .typeError("나이는 숫자여야 합니다.")
+        .integer("나이는 정수여야합니다.")
+        .min(19, "해당 사이트는 19살 이상만 가입할 수 있습니다.")
+        .required("나이를 입력해주세요"),
+    password: yup
+        .string()
+        .min(4, "비밀번호는 최소 4자리 이상이어야 합니다.")
+        .max(12, "비밀번호는 최대 12자리까지 가능합니다.")
+        .test(
+            'strong-password',
+            '비밀번호는 대문자, 소문자, 숫자, 특수문자를 모두 포함해야 합니다.',
+            value => {
+                if (!value)
+                    return false;
+                const upperCaseValid = /[A-Z]/.test(value);
+                const lowerCaseValid = /[a-z]/.test(value);
+                const numberValid = /[0-9]/.test(value);
+                const specialCharValid = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+                return upperCaseValid && lowerCaseValid && numberValid && specialCharValid;
             }
+        )
+        .required("비밀번호를 입력해주세요."),
+    confirmPassword: yup
+        .string()
+        .oneOf([yup.ref('password'), null], "비밀번호가 일치하지 않습니다.")
+        .required("비밀번호 확인을 입력해주세요.")
+
+});
+
+const SignUp = () => {
+
+    const navigate = useNavigate(); 
+     const handleLoginClick = () => {
+        navigate("/login")
+    };
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+    });
+
+    const onSubmit = async data => {
+        try {
+            const response = await axios.post('http://localhost:8080/auth/signup', data);
+            if (response.status === 201) {
+                alert("회원가입이 정상적으로 처리되었습니다.");
+                console.log(data);
+                navigate("/login");
+            }
+            else if(response.status === 409){
+                alert("이미 존재하는 아이디 입니다.");
+            }
+            else if(response.status === 400){
+                alert("비밀번호가 일치하지 않습니다.");
+            }
+            else{
+                alert("회원가입에 실패했습니다.");
+            }    
+        } catch (error) {
+            alert("회원가입 중 오류가 발생했습니다.");
         }
     }
 
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        validateForm();
-
-        if (form.validName && form.validEmail && form.validAge && form.validPassword &&form.validPasswordCheck){
-            console.log("Username: ", form.name);
-            console.log("E-mail: ", form.email)
-            console.log("Age: ", form.age)
-            console.log("Password: ", form.password);
-        }
-
-        
-    }
-    
-  return (
-    <Container>
-        <Title>회원가입</Title>
-        <form onSubmit={handleSubmit}>
-            <Input
-                type='text' placeholder="name" 
-                value={form.name} name='name'
-                onChange={ handleInputChange }
-            />
-            <Error>{passMessage.name}</Error>
-            <Input
-                type='text' placeholder="e-mail" 
-                value={form.email} name='email'
-                onChange={ handleInputChange }
-            />
-            <Error>{passMessage.email}</Error>
-            <Input
-                type='number' placeholder="나이" 
-                value={form.age} name='age'
-                onChange={ handleInputChange }
-            />
-            <Error>{passMessage.age}</Error>
-            <Input
-                type='password' placeholder="password" 
-                value={form.password} name='password'
-                onChange={ handleInputChange }
-            />
-            <Error>{passMessage.password}</Error>
-            <Input
-                type='password' placeholder="password check" 
-                value={form.passwordCheck} name='passwordCheck'
-                onChange={ handleInputChange }
-            />
-            <Error>{passMessage.passwordCheck}</Error>
-            <Button type='submit'>가입하기</Button>
-
-        </form>
-    </Container>
-  )
-};
+    return (
+        <Container>
+                <Title>회원가입</Title>
+                 <form onSubmit={handleSubmit(onSubmit)}>
+                     <Input
+                         type='text' {...register('name')}
+                         placeholder="이름"
+                     />
+                     { errors.name && <Error>{errors.name.message}</Error>}
+                    <Input
+                         type='text' {...register('userid')}
+                         placeholder="아이디" 
+                     />
+                     { errors.userid && <Error>{errors.userid.message}</Error>}
+                     <Input
+                         type='text' {...register("email")}
+                         placeholder="이메일" 
+                         
+                     />
+                     { errors.email && <Error>{errors.email.message}</Error>}
+                     <Input
+                         type='number' {...register('age')}
+                         placeholder="나이"
+                     />
+                     { errors.age && <Error>{errors.age.message}</Error>}
+                     <Input
+                         type='password' {...register('password')}
+                         placeholder="비밀번호" 
+                     />
+                     { errors.password ? <Error>{errors.password.message}</Error> : <NoError>안전한 비밀번호입니다.</NoError>}
+                     <Input
+                         type='password' {...register("confirmPassword")}
+                         placeholder="비밀번호 확인" 
+                     />
+                     { errors.confirmPassword ? <Error>{errors.confirmPassword.message}</Error> : <NoError>비밀번호가 일치합니다.</NoError>}
+                    
+                     <Button type='submit'>가입하기</Button>
+                     <ToLogin onClick={handleLoginClick}>이미 회원이신가요? 로그인 하러 가기</ToLogin>
+                 </form>
+                
+             </Container>
+    )
+}
 
 export default SignUp
+

@@ -12,6 +12,7 @@ import NotFoundPage from './components/NotFoundPage.jsx'
 import 'normalize.css'
 import MovieDetail from './components/MovieDetail.jsx'
 import SignUp from './components/SignUp.jsx'
+import Login from './components/Login.jsx'
 function App() {
 
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path='/upcoming' element={<UpComing />} />
           <Route path='/movie/:id' element={<MovieDetail />} />
           <Route path='/signup' element={<SignUp />} />
+          <Route path='/login' element={<Login />}/>
           <Route path='/*' element={<NotFoundPage />}/>
         </Routes>     
        <Foot />

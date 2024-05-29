@@ -29,10 +29,12 @@ function Nav() {
                     <Link className="navbarMenu" onClick={handleLoginClick}>Login</Link>
                 )} */}
                 <Link className="navbarMenu" to={'/signup'} onClick={handleMenuClick}>회원가입</Link>           
+                <Link className="navbarMenu" to={'/login'} onClick={handleMenuClick}>로그인</Link>
                 <Link className="navbarMenu" to={'/nowplaying'} onClick={handleMenuClick}>Now Playing</Link>
                 <Link className="navbarMenu" to={'/toprated'} onClick={handleMenuClick}>Top Rated</Link>
                 <Link className="navbarMenu" to={'/popular'} onClick={handleMenuClick}>Popular</Link>
                 <Link className="navbarMenu" to={'/upcoming'} onClick={handleMenuClick}>UpComing</Link>
+                
             </div>
         </div>
     )

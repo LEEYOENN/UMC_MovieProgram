@@ -35,19 +35,19 @@ const MovieRate = styled.h4`
 const MovieWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-left: 10%
+  margin-left: 4%
 `;
 const Overview = styled.span`
 position: absolute;
 top: 0;
 left: 0;
 right: 0;
-bottom: 0;
+bottom: 1;
 
 color: white;
 padding: 10px;
 box-sizing: border-box;
-font-size: 20px;
+font-size: 15px;
 border-radius: 5px;
 
 display: flex;
@@ -67,6 +67,10 @@ const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"
 
 function TopRated() {
 
+  const navigate = useNavigate();
+  const [movieList, setMovieList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [hoverMovieId, setHoverMovieId] = useState(null);
   const [movieOne, setMovieOne] = useState([]);
 
   const getMovieDetail = async (id) => {
@@ -82,17 +86,11 @@ function TopRated() {
       .then(response => response.json())
       .then(response => setMovieOne(response))            
       .catch(err => console.error(err));
+      console.log(movieOne)
       setLoading(false);
 
   }
 
-
-
-
-  const navigate = useNavigate();
-  const [movieList, setMovieList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [hoverMovieId, setHoverMovieId] = useState(null);
 
   const getMovie = async() => {
       const options = {
@@ -128,7 +126,7 @@ return (
           
             <MovieContainer key={movie.id}
               onMouseEnter={ () => {setHoverMovieId(movie.id) ;
-                                    getMovieDetail(hoverMovieId);
+                                    getMovieDetail(movie.id);
                                     setIsHover(true);
               }}
               onMouseLeave={ () => {setHoverMovieId(null);

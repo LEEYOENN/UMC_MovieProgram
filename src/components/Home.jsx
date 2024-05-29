@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import 'normalize.css'
 import axios from 'axios'
+
 const Input = styled.input`
     width: 400px;
     margin-bottom: 30px;
@@ -99,39 +100,41 @@ function Home() {
     const [searchMovie, setSearchMovie] = useState('')
     const [movieList, setMovieList] = useState([]);
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    useEffect( () => {
+        setIsLoading(true);
+        const fetchMovie = async () => {
+            try {
+                
+                const response = await axios.get(searchEndpoint,
+                    {
+                        params: {
+                            api_key: api_key,
+                            query: searchMovie,
+                            include_adult: true,
+                            language: 'en-US',
+                            page: 1
+                        },
 
-useEffect( () => {
-    const fetchMovie = async () => {
-        try {
+                    }
+                );
+                const results = response.data.results;
+                setMovieList(results);
+                setIsLoading(false);
+            }
             
-            const response = await axios.get(searchEndpoint,
-                {
-                    params: {
-                        api_key: api_key,
-                        query: searchMovie,
-                        include_adult: true,
-                        language: 'en-US',
-                        page: 2
-                    },
-
-                }
-            );
-            const results = response.data.results;
-            setMovieList(results);
+            catch (error){
+                console.log("Something got wrong, Please try again", error);
+            }
         }
+        const debounceFetchMovie= debounce(fetchMovie, 1500);
         
-        catch (error){
-            console.log("Somthing got wrong, Please try again", error);
-        }
-    }
-    const debounceFetchMovie= debounce(fetchMovie, 1000);
-    
-    debounceFetchMovie();
+        debounceFetchMovie();
 
-    return () => {
-        clearTimeout(debounceFetchMovie);
-    };
-    }, [searchMovie]); //searchMovie가 업데이트할때 useEffect 실행합니다.
+        return () => {
+            clearTimeout(debounceFetchMovie);
+        };
+        }, [searchMovie]); //searchMovie가 업데이트할때 useEffect 실행합니다.
 
 
     const handleMovieClick = (movieId) => {
@@ -163,10 +166,12 @@ useEffect( () => {
                 </form>
                 </SearchBar>
                 <MovieWrapper>
+                    {isLoading ? (<SearchTitle>데이터를 받아오는 중입니다..</SearchTitle>) : null}
                     {movieList.map((movie) => {
                         return(
                         <div className="movie-container" key={movie.id}>
-                            {movie.poster_path && <img src={IMG_BASE_URL + movie.poster_path} alt='img' onClick={ () =>handleMovieClick(movie.id)}/>}
+                            {movie.poster_path ? (<img src={IMG_BASE_URL + movie.poster_path} alt='img' onClick={ () =>handleMovieClick(movie.id)}/>) : 
+                            (<img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz7ztleRwzXhFdiwBYqZ8cib9RvEsukVVUS3niN1YQ&s'alt='img' onClick={ () =>handleMovieClick(movie.id)}/> )}
                             <div className="movie-info">
                                 <h4 onClick={ () =>handleMovieClick(movie.id)}>{movie.title}</h4>
                             </div>
