@@ -18,12 +18,23 @@ const Container = styled.div`
     margin: auto;
     padding: 20px;
     flex-wrap: wrap;
+    
+    @media (max-width: 600px) {
+        max-width: 90%;
+        padding: 10px;
+    }
 `;
 const Title = styled.h2`
     margin-top: 60px;
     margin-bottom: 40px;
     text-align: center;
     color: white;
+
+    @media (max-width: 600px){
+        margin-top: 40px;
+        margin-bottom: 30px;
+        font-size: 1.5em;
+    }
 `;
 const Input = styled.input`
     width: 400px;
@@ -33,18 +44,33 @@ const Input = styled.input`
     padding: 10px 10px 10px 30px;
     border: 1px solid #ccc;
     border-radius: 20px;
+
+    @media (max-width: 600px){
+        width: 90%;
+        padding-left:20px;
+        height: 25px;
+        margin-bottom: 20px;
+    }
 `;
 const Error = styled.p`
     font-size: 12px;
     color: red;
     margin-top:-10px; 
     margin-bottom: 20px;
+
+    @media (max-width: 600px){
+        font-size: 10px;
+    }
 `;
 const NoError = styled.p`
     font-size: 12px;
     color: green;
     margin-top:-10px; 
     margin-bottom: 20px;
+
+    @media (max-width: 600px){
+        font-size: 10px;
+    }
 `;
 const Button = styled.button`
     width: 80%;
@@ -59,6 +85,13 @@ const Button = styled.button`
     &:hover {
         background-color: #005603;
     }
+
+    @media (max-width: 600px){
+        width: 90%;
+        height: 40px;
+        margin-left: 0;
+        font-size: 0.9em;
+    }
     `;
 const ToLogin = styled.h4`
     margin-top: 60px;
@@ -68,11 +101,16 @@ const ToLogin = styled.h4`
     &:hover{
         cursor: pointer;
     }
+    @media (max-width: 600px){
+        margin-top: 40px;
+        margin-bottom: 30px;
+        font-size: 1em;
+    }
 `;
 
 const schema = yup.object().shape({
     name: yup.string().required("이름을 입력하세요."),
-    userid: yup.string().required("아이디를 입력해주세요."),
+    username: yup.string().required("아이디를 입력해주세요."),
     email: yup.string().email("이메일 형식에 맞게 입력해주세요.").required("이메일을 입력해주세요."),
     age: yup
         .number()
@@ -98,7 +136,7 @@ const schema = yup.object().shape({
             }
         )
         .required("비밀번호를 입력해주세요."),
-    confirmPassword: yup
+    passwordCheck: yup
         .string()
         .oneOf([yup.ref('password'), null], "비밀번호가 일치하지 않습니다.")
         .required("비밀번호 확인을 입력해주세요.")
@@ -111,6 +149,7 @@ const SignUp = () => {
      const handleLoginClick = () => {
         navigate("/login")
     };
+
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
@@ -122,20 +161,35 @@ const SignUp = () => {
                 alert("회원가입이 정상적으로 처리되었습니다.");
                 console.log(data);
                 navigate("/login");
-            }
-            else if(response.status === 409){
+            } else if (response.status === 409) {
                 alert("이미 존재하는 아이디 입니다.");
-            }
-            else if(response.status === 400){
+            } else if (response.status === 400) {
                 alert("비밀번호가 일치하지 않습니다.");
-            }
-            else{
+            } else {
                 alert("회원가입에 실패했습니다.");
-            }    
+            }
         } catch (error) {
-            alert("회원가입 중 오류가 발생했습니다.");
+            if (error.response) {
+                // 서버가 2xx 외의 상태 코드를 반환한 경우
+                if (error.response.status === 409) {
+                    alert("이미 존재하는 아이디 입니다.");
+                } else if (error.response.status === 400) {
+                    console.log(data);
+                    alert("에러 메시지 비밀번호가 일치하지 않습니다.");
+                } else {
+                    alert("회원가입에 실패했습니다.");
+                }
+            } else if (error.request) {
+                // 요청이 만들어졌으나 응답을 받지 못한 경우
+                console.error('Error: No response received', error.request);
+                alert("서버로부터 응답이 없습니다. 서버가 실행 중인지 확인하세요.");
+            } else {
+                // 요청을 설정하는 중에 오류가 발생한 경우
+                console.error('Error:', error.message);
+                alert("회원가입 중 오류가 발생했습니다.");
+            }
         }
-    }
+    };
 
     return (
         <Container>
@@ -147,14 +201,13 @@ const SignUp = () => {
                      />
                      { errors.name && <Error>{errors.name.message}</Error>}
                     <Input
-                         type='text' {...register('userid')}
+                         type='text' {...register('username')}
                          placeholder="아이디" 
                      />
-                     { errors.userid && <Error>{errors.userid.message}</Error>}
+                     { errors.username && <Error>{errors.username.message}</Error>}
                      <Input
                          type='text' {...register("email")}
                          placeholder="이메일" 
-                         
                      />
                      { errors.email && <Error>{errors.email.message}</Error>}
                      <Input
@@ -166,13 +219,14 @@ const SignUp = () => {
                          type='password' {...register('password')}
                          placeholder="비밀번호" 
                      />
-                     { errors.password ? <Error>{errors.password.message}</Error> : <NoError>안전한 비밀번호입니다.</NoError>}
+                     { errors.password && <Error>{errors.password.message}</Error>}
                      <Input
-                         type='password' {...register("confirmPassword")}
+                         type='password' {...register("passwordCheck")}
                          placeholder="비밀번호 확인" 
                      />
-                     { errors.confirmPassword ? <Error>{errors.confirmPassword.message}</Error> : <NoError>비밀번호가 일치합니다.</NoError>}
+                     { errors.passwordCheck && <Error>{errors.passwordCheck.message}</Error>}
                     
+                     
                      <Button type='submit'>가입하기</Button>
                      <ToLogin onClick={handleLoginClick}>이미 회원이신가요? 로그인 하러 가기</ToLogin>
                  </form>

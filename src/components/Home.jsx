@@ -13,6 +13,11 @@ const Input = styled.input`
     padding: 10px 10px 10px 30px;
     border: 1px solid #ccc;
     border-radius: 20px;
+
+    @media (max-width: 600px) {
+        width: 80%;
+        padding-left: 20px;
+    }
 `;
 const Container = styled.div`
 
@@ -24,22 +29,30 @@ const Container = styled.div`
     margin: auto;
     padding: 20px;
     flex-wrap: wrap;
+
+    @media (max-width: 600px) {
+        max-width: 90%;
+        padding: 10px;
+    }
 `;
 const SearchText = styled.h1`
     color: white;
     text-align: center;
-    color: white;
 `;
 const SearchTitle = styled.h2`
     color: white;
     text-align: center;
-    color: white;
 `;
 const TitleBack = styled.div`
     background-color: rgb(0, 0, 0);
     padding-top: 50px;
     padding-bottom:50px;
     margin: 0%;
+
+    @media (max-width: 600px) {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
 `;
 const SearchBox = styled.div`
     display: flex;
@@ -50,11 +63,18 @@ const SearchBox = styled.div`
     padding-bottom: 100%;
     margin: auto;
     background-color: rgb(20, 20, 63)
+
+    
+    @media (max-width: 600px) {
+        padding-top: 30px;
+        padding-bottom: 50px;
+    }
 `;
 const SearchBar = styled.div`
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
 
 `;
 const SearchBtn = styled.button`
@@ -70,6 +90,12 @@ const SearchBtn = styled.button`
     &:hover {
         background-color: rgb(241, 196, 75);
     }
+
+    @media (max-width: 600px) {
+        height: 40px;
+        padding: 8px;
+        font-size: 20px;
+    }
 `;
 const MovieWrapper = styled.div`
     display: flex;
@@ -79,6 +105,11 @@ const MovieWrapper = styled.div`
     margin-right: 10%;
     overflow-y: auto; /* 수직 스크롤바가 필요한 경우에만 나타나게 설정 */
     overflow-x: hidden; /* 가로 스크롤바 감춤 */
+    @media (max-width: 600px) {
+        margin-left:5%;
+        margin-right: 5%;
+        max-height:500px;
+    }
 `;
 const IMG_BASE_URL = "https://image.tmdb.org/t/p/w200/"
 

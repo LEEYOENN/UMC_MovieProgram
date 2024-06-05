@@ -15,6 +15,12 @@ const MovieWrapper = styled.div`
     justify-content: center;
     
     margin: 100px 20% 0 20%;
+    @media (max-width: 768px) {
+        margin: 50px 10% 0 20%
+    }
+    @media (max-width: 600px) {
+        margin: 20px 5% 0 5%;
+    }
 `;
 
 
@@ -23,6 +29,13 @@ const MoviePoster = styled.img`
     max-width: 400px;
     height: auto;
     margin-bottom: 20px;
+    
+    @media (max-width: 768px) {
+        max-width: 300px;
+    }
+    @media (max-width: 600px) {
+        max-width: 70%;
+    }
 `;
 const MovieInfo = styled.div`
     text-align: center;
@@ -30,6 +43,10 @@ const MovieInfo = styled.div`
     justify-content = center;
     align-items: center;
     flex-direction: row;
+    
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
 const MovieDetailInfo = styled.div`
     text-align: center;
@@ -38,41 +55,91 @@ const MovieDetailInfo = styled.div`
     align-items: center;
     flex-direction: column;
     margin-left: 5%;
+    
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
 `;
 const Rating = styled.h3`
     font-size: 20px;
     color: white;
+    
+    @media (max-width: 600px) {
+        font-size: 16px
+    }
 `;
 const ProfileTitle = styled.h3`
     font-size:25px;
     color: white;
     text-align: center;
     margin: 20% 0 30px 0;
+    
+    @media (max-width: 600px) {
+        font-size: 22px;
+    }
+    @media (max-width: 600px) {
+        font-size: 22px;
+    }
 `;
 const Overview = styled.span`
     margin: 20px 10% 10% 10%;
     
     color: white;
+    @media (max-width: 768px) {
+        margin: 10% 5% 5% 5%;
+        font-size: 15px;
+      }
+    
+      @media (max-width: 600px) {
+        margin: 5% 3% 3% 3%;
+        font-size: 15px;
+      }
+    
 `;
 const Profile = styled.div`
     display : flex;
     flex-direction: column;
+    margin: 20px;
+    
+    @media (max-width: 600px) {
+        margin: 5px;
+    }
  
 `;
 const CreditWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     
+    @media (max-width: 600px) {
+        justify-content: space-around;
+    }
+    
 `;
 const ProfileName = styled.span`   
     color: white;
+    margin-top: 5px;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 `;
 const ProfileImg = styled.img`
     max-width: 50px;
     border-radius: 100px;
+    
+    @media (max-width: 600px) {
+        max-width: 40px;
+    }
 `;
 const MovieTitle = styled.h3`
     color: white;
+    font-size: 36px;
+    @media (max-width: 768px) {
+        font-size: 30px;
+    }
+    @media (max-width: 600px) {
+        font-size: 25px;
+    }
 
 `;
 

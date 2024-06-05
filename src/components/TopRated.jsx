@@ -5,12 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const MovieContainer = styled.div`
-width: 250px;
-margin: 16px;
-color: white;
-background-color: #343869;
-border-radius: 5px;
-position: relative; /* Ensures the Overview can be positioned absolutely */
+  width: 250px;
+  margin: 16px;
+  color: white;
+  background-color: #343869;
+  border-radius: 5px;
+  position: relative; /* Ensures the Overview can be positioned absolutely */
+  
+  @media (max-width: 600px) {
+    width: 100%;
+    margin: 8px 0;
+  }
+
 `;
 const MovieImg = styled.img`
   max-width: 100%;
@@ -18,6 +24,10 @@ const MovieImg = styled.img`
   &:hover{
     cursor: pointer;
     opacity:0.7;
+  }
+
+  @media (max-width: 600px) {
+    height:auto;
   }
 `;
 const MovieTitle = styled.h4`
@@ -27,40 +37,63 @@ const MovieTitle = styled.h4`
     cursor: pointer;
     opacity:0.8;
   }
+  @media (max-width: 600px) {
+    font-size: 1em;
+  }
 `;
 const MovieRate = styled.h4`
   color: white;
   margin-left: 10px;
+
+  @media (max-width: 600px) {
+    font-size: 0.9em;
+  }
 `;
 const MovieWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-left: 4%
+
+  @media (max-width: 600px) {
+    margin-left: 0;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 const Overview = styled.span`
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-bottom: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 1;
 
-color: white;
-padding: 10px;
-box-sizing: border-box;
-font-size: 15px;
-border-radius: 5px;
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 15px;
+  border-radius: 5px;
 
-display: flex;
-justify-content: center;
-align-items: center;
-text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 
-transition: opacity 0.3s ease;
-pointer-events: none; /* Prevent interactions with the overview */
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Prevent interactions with the overview */
+
+  @media (max-width: 600px) {
+    font-size: 1em;
+    padding: 5px;
+  }
 `;
 const Title = styled.h2`
   color: white;
   margin-left: 75%;
+
+  @media (max-width: 600px) {
+    text-align: center;
+  }
+
   
 `;
 const IMG_BASE_URL = "https://image.tmdb.org/t/p/w1280/"

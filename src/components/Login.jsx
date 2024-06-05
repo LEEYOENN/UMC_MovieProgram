@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
+
 const Container = styled.div`
 
     display: flex;
@@ -14,18 +16,33 @@ const Container = styled.div`
     margin: auto;
     padding: 20px;
     flex-wrap: wrap;
+
+    @media (max-width: 600px) {
+        max-width: 90%;
+        padding: 10px;
+    }
 `;
 const Title = styled.h2`
     margin-top: 60px;
     margin-bottom: 40px;
     text-align: center;
     color: white;
+
+    @media (max-width: 600px){
+        margin-top: 40px;
+        margin-bottom: 30px;
+        font-size:1.5em;
+    }
 `;
 const Error = styled.p`
     font-size: 12px;
     color: red;
     margin-top:-10px; 
     margin-bottom: 20px;
+
+    @media (max-width: 600px) {
+        font-size: 10px;
+    }
 `;
 const Button = styled.button`
     width: 80%;
@@ -40,6 +57,13 @@ const Button = styled.button`
     &:hover {
         background-color: #005603;
     }
+
+    @media (max-width: 600px) {
+        width:90%;
+        height: 40px;
+        margin-left: 0;
+        font-size: 0.9em;
+    }
 `;
 const Input = styled.input`
     width: 400px;
@@ -49,6 +73,13 @@ const Input = styled.input`
     padding: 10px 10px 10px 30px;
     border: 1px solid #ccc;
     border-radius: 20px;
+
+    @media (max-width: 600px) {
+        width: 90%;
+        padding-left: 20px;
+        height: 20px;
+        margin-bottom: 20px;
+    }
 `;
 const schema = yup.object().shape({
     userid: yup
@@ -78,7 +109,8 @@ function Login() {
         resolver: yupResolver(schema)
     });
     
-    const onSubmit = data => {
+    const onSubmit = async data => {
+        //const response = await axios.post('http://localhost:8080/auth/signup', data);
         console.log(data);
     }
 
